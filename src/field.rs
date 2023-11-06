@@ -1,4 +1,3 @@
-use crate::util::keccak256;
 use ruint::{aliases::U256, uint};
 
 /// An element of the BN254 scalar field Fr.
@@ -17,9 +16,10 @@ pub const MODULUS: Field =
 #[must_use]
 #[allow(clippy::module_name_repetitions)]
 #[allow(clippy::missing_panics_doc)]
+#[cfg(feature = "proof")]
 pub fn hash_to_field(data: &[u8]) -> Field {
     // Never panics because the target uint is large enough.
-    let n = U256::try_from_be_slice(&keccak256(data)).unwrap();
+    let n = U256::try_from_be_slice(&crate::util::keccak256(data)).unwrap();
     // Shift right one byte to make it fit in the field
     n >> 8
 }

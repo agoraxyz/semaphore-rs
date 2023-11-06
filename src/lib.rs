@@ -1,32 +1,38 @@
 #![doc = include_str!("../README.md")]
 #![warn(clippy::all, clippy::pedantic, clippy::cargo, clippy::nursery)]
-// TODO: ark-circom and ethers-core pull in a lot of dependencies, some duplicate.
-#![allow(clippy::multiple_crate_versions)]
+#![deny(unused_crate_dependencies)]
 
+#[cfg(feature = "proof")]
 mod circuit;
 mod field;
+#[cfg(feature = "proof")]
 pub mod hash;
+#[cfg(feature = "proof")]
 pub mod identity;
 pub mod merkle_tree;
 pub mod poseidon;
 pub mod poseidon_tree;
+#[cfg(feature = "proof")]
 pub mod protocol;
+#[cfg(feature = "proof")]
 pub mod util;
 
 pub mod lazy_merkle_tree;
 
-use ark_bn254::Parameters;
-use ark_ec::bn::Bn;
-
 // Export types
-pub use crate::field::{hash_to_field, Field};
+#[cfg(feature = "proof")]
+pub use crate::field::hash_to_field;
+pub use crate::field::Field;
 
+#[cfg(feature = "proof")]
 pub use semaphore_depth_config::get_supported_depths;
 
 #[cfg(feature = "dylib")]
 pub use circuit::initialize;
 
-pub type Groth16Proof = ark_groth16::Proof<Bn<Parameters>>;
+#[cfg(feature = "proof")]
+pub type Groth16Proof = ark_groth16::Proof<ark_ec::bn::Bn<ark_bn254::Parameters>>;
+#[cfg(feature = "proof")]
 pub type EthereumGroth16Proof = ark_circom::ethereum::Proof;
 
 #[cfg(test)]

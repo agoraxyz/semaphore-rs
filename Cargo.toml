@@ -17,7 +17,25 @@ license-file = "mit-license.md"
 members = ["crates/*"]
 
 [features]
-default = []
+default = ["proof"]
+proof = [
+    "ark-circom",
+    "ark-ec",
+    "ark-groth16",
+    "ark-relations",
+    "ark-std",
+    "color-eyre",
+    "ethers-core",
+    "hex",
+    "num-bigint",
+    "rand",
+    "semaphore-depth-config",
+    "semaphore-depth-macros",
+    "sha2",
+    "tiny-keccak",
+    "wasmer",
+    "zeroize",
+]
 bench = ["criterion", "proptest"]
 dylib = ["wasmer/dylib", "wasmer-engine-dylib", "wasmer-compiler-cranelift"]
 depth_16 = ["semaphore-depth-config/depth_16", "semaphore-depth-macros/depth_16"]
@@ -31,37 +49,34 @@ path = "criterion.rs"
 required-features = ["bench", "proptest"]
 
 [dependencies]
-ark-bn254 = { version = "0.3.0" }
-ark-circom = { git = "https://github.com/gakonst/ark-circom", rev = "a93c8b0", features = ["circom-2"] }
-ark-ec = { version = "0.3.0", default-features = false, features = ["parallel"] }
+ark-bn254 = "0.3.0"
+ark-circom = { git = "https://github.com/gakonst/ark-circom", rev = "a93c8b0", features = ["circom-2"], optional = true }
+ark-ec = { version = "0.3.0", default-features = false, features = ["parallel"], optional = true }
 ark-ff = { version = "0.3.0", default-features = false, features = ["parallel", "asm"] }
-ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", rev = "765817f", features = ["parallel"] }
-ark-relations = { version = "0.3.0", default-features = false }
-ark-std = { version = "0.3.0", default-features = false, features = ["parallel"] }
-color-eyre = "0.6"
+ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", rev = "765817f", features = ["parallel"], optional = true }
+ark-relations = { version = "0.3.0", default-features = false, optional = true }
+ark-std = { version = "0.3.0", default-features = false, features = ["parallel"], optional = true }
+color-eyre = { version = "0.6", optional = true }
 criterion = { version = "0.3", optional = true, features = ["async_tokio"] }
-hex = "0.4.0"
-hex-literal = "0.3"
-num-bigint = { version = "0.4", default-features = false, features = ["rand"] }
+hex = { version = "0.4.0", optional = true }
+num-bigint = { version = "0.4", default-features = false, features = ["rand"], optional = true }
 once_cell = "1.8"
 proptest = { version = "1.0", optional = true }
-rand = "0.8.4"
-rayon = "1.5.1"
+rand = { version = "0.8.4", optional = true }
 ruint = { version = "1.2.0", features = ["serde", "num-bigint", "ark-ff"] }
-semaphore-depth-config = { path = "crates/semaphore-depth-config" }
-serde = "1.0"
-sha2 = "0.10.1"
+semaphore-depth-config = { path = "crates/semaphore-depth-config", optional = true }
+semaphore-depth-macros = { path = "crates/semaphore-depth-macros", optional = true }
+serde = { version = "1.0", features = ["derive"] }
+sha2 = { version = "0.10.1", optional = true }
 thiserror = "1.0.0"
-tiny-keccak = { version = "2.0.2" }
-wasmer = { version = "2.0" }
-semaphore-depth-macros = { path = "crates/semaphore-depth-macros" }
-zeroize = "1.6.0"
+tiny-keccak = { version = "2.0.2", optional = true }
+wasmer = { version = "2.0", optional = true }
+zeroize = { version = "1.6.0", optional = true }
 mmap-rs = "0.5.0"
-bincode = "1.3.3"
 
 # Use the same `ethers-core` version as ark-circom
 # TODO: Remove
-ethers-core = { git = "https://github.com/gakonst/ethers-rs", default-features = false }
+ethers-core = { git = "https://github.com/gakonst/ethers-rs", default-features = false, optional = true }
 
 [dev-dependencies]
 bincode = "1.3.3"
